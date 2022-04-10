@@ -3,58 +3,33 @@ package com.dbb.camera2view;
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
-import android.util.Log;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
+/**
+ * Display Draw
+ */
 public class CameraDrawer {
 
     protected float[] scaleMatrix = MatrixUtils.getOriginalMatrix();
     protected float[] translateMatrix = MatrixUtils.getOriginalMatrix();
-
-    private final String VERTEX_SHADER = "" +
-            "attribute vec4 vPosition;" +
-            "attribute vec2 inputTextureCoordinate;" +
-            "varying vec2 textureCoordinate;" +
-            "uniform mat4 vMatrix;"+
-            "void main()" +
-            "{" +
-            "gl_Position = vMatrix*vPosition;" +
-            "textureCoordinate = inputTextureCoordinate;" +
-            "}";
-    private final String FRAGMENT_SHADER = "" +
-            "#extension GL_OES_EGL_image_external : require\n" +
-            "precision mediump float;" +
-            "varying vec2 textureCoordinate;\n" +
-            "uniform samplerExternalOES s_texture;\n" +
-            "void main() {" +
-            "  gl_FragColor = texture2D( s_texture, textureCoordinate );\n" +
-            "}";
-
 
     private final int mProgram;
     private final int mPositionHandle;
     private final int mTextureHandle;
     private final int glHMatrix;
 
-    private FloatBuffer bPos;
-    private FloatBuffer bCoord;
-    private float value = 1.0f;
+    private final FloatBuffer bPos;
+    private final FloatBuffer bCoord;
+    private final float value = 1.0f;
 
-    private float[] sPos = {
+    private final float[] sPos = {
             -value, value,
             -value, -value,
             value, value,
             value, -value
-    };
-
-    private final float[] sCoord = {
-            0.0f, 0.0f,
-            0.0f, 1.0f,
-            1.0f, 0.0f,
-            1.0f, 1.0f,
     };
 
 
@@ -86,6 +61,12 @@ public class CameraDrawer {
         bPos.put(sPos);
 
         bPos.position(0);
+        float[] sCoord = {
+                0.0f, 0.0f,
+                0.0f, 1.0f,
+                1.0f, 0.0f,
+                1.0f, 1.0f,
+        };
         ByteBuffer cc = ByteBuffer.allocateDirect(sCoord.length * 4);
         cc.order(ByteOrder.nativeOrder());
         bCoord = cc.asFloatBuffer();
@@ -93,6 +74,24 @@ public class CameraDrawer {
         bCoord.position(0);
 
 
+        String VERTEX_SHADER = "" +
+                "attribute vec4 vPosition;" +
+                "attribute vec2 inputTextureCoordinate;" +
+                "varying vec2 textureCoordinate;" +
+                "uniform mat4 vMatrix;" +
+                "void main()" +
+                "{" +
+                "gl_Position = vMatrix*vPosition;" +
+                "textureCoordinate = inputTextureCoordinate;" +
+                "}";
+        String FRAGMENT_SHADER = "" +
+                "#extension GL_OES_EGL_image_external : require\n" +
+                "precision mediump float;" +
+                "varying vec2 textureCoordinate;\n" +
+                "uniform samplerExternalOES s_texture;\n" +
+                "void main() {" +
+                "  gl_FragColor = texture2D( s_texture, textureCoordinate );\n" +
+                "}";
         mProgram = OpenGLUtils.createProgram(VERTEX_SHADER, FRAGMENT_SHADER);
         mPositionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition");
         mTextureHandle = GLES20.glGetAttribLocation(mProgram, "inputTextureCoordinate");
@@ -106,7 +105,7 @@ public class CameraDrawer {
 
     }
 
-    public void draw(int texture, boolean isFrontCamera) {
+    public void draw(int texture) {
         GLES20.glUseProgram(mProgram); // 指定使用的program
         GLES20.glEnable(GLES20.GL_CULL_FACE); // 启动剔除
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);

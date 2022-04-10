@@ -67,7 +67,7 @@ public class Camera2GLSurfaceView extends GLSurfaceView implements GLSurfaceView
         GLES20.glClearColor(0, 0, 0, 0);
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
         mSurfaceTexture.updateTexImage();
-        mDrawer.draw(mTextureId, mCameraProxy.isFrontCamera());
+        mDrawer.draw(mTextureId);
     }
 
     @Override

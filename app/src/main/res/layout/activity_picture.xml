@@ -6,6 +6,8 @@
 
 
     <com.dbb.camera2view.Camera2GLSurfaceView
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="200dp"
         android:id="@+id/camera_view"
         android:layout_width="1920px"
         android:layout_height="1080px" />
@@ -30,7 +32,7 @@
                 android:id="@+id/scale_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="30sp" />
         </LinearLayout>
 
@@ -54,7 +56,7 @@
                 android:id="@+id/left_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="30sp" />
         </LinearLayout>
 
@@ -72,7 +74,7 @@
                 android:id="@+id/up_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="30sp" />
         </LinearLayout>
 
@@ -91,7 +93,7 @@
                 android:id="@+id/right_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="30sp" />
         </LinearLayout>
 
@@ -110,7 +112,7 @@
                 android:id="@+id/down_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="30sp" />
         </LinearLayout>
     </LinearLayout>
