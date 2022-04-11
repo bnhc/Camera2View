@@ -34,11 +34,12 @@ public class SGLViewActivity extends Activity implements View.OnClickListener {
     private TextView down_tv;
 
     private final float value = 1.0f;
+    private final float yValue =1.9f;//条形显示
 
     private final float default_left = -value;
     private final float default_right = value;
-    private final float default_up = value;
-    private final float default_down = -value;
+    private final float default_up = yValue;
+    private final float default_down = -yValue;
 
     private float left = default_left, right = default_right, up = default_up, down = default_down;
     private float centerX = 0f, centerY = 0f;
