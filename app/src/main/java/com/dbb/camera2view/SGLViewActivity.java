@@ -15,10 +15,14 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 
 /**
  * Description: 测试GLSurfaceView
+ *
  * @author 大博博
  */
 public class SGLViewActivity extends Activity implements View.OnClickListener {
@@ -33,16 +37,17 @@ public class SGLViewActivity extends Activity implements View.OnClickListener {
     private TextView up_tv;
     private TextView down_tv;
 
-    private final float value = 1.0f;
-    private final float yValue =1.9f;//条形显示
+    private final float value = 0.5f;
 
     private final float default_left = -value;
     private final float default_right = value;
-    private final float default_up = yValue;
-    private final float default_down = -yValue;
+    private final float default_up = value;
+    private final float default_down = -value;
 
     private float left = default_left, right = default_right, up = default_up, down = default_down;
-    private float centerX = 0f, centerY = 0f;
+
+    private ArrayList<Float> scale_large_list = new ArrayList<>();
+    private ArrayList<Float> scale_small_list = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +80,35 @@ public class SGLViewActivity extends Activity implements View.OnClickListener {
         up_tv = (TextView) findViewById(R.id.up_tv);
         down_tv = (TextView) findViewById(R.id.down_tv);
         updateLRUDStatus();
+        initData();
     }
+
+    private void initData() {
+        scale_large_list.add(1.00f);//1.0
+        scale_large_list.add(1.10f);//1.1
+        scale_large_list.add(1.0909f);//1.2
+        scale_large_list.add(1.0833f);//1.3
+        scale_large_list.add(1.0769f);//1.4
+        scale_large_list.add(1.0714f);//1.5
+        scale_large_list.add(1.0666f);//1.6
+        scale_large_list.add(1.0625f);//1.7
+        scale_large_list.add(1.0588f);//1.8
+        scale_large_list.add(1.0555f);//1.9
+        scale_large_list.add(1.0526f);//2.0
+
+        scale_small_list.add(1.00f);//2.0
+        scale_small_list.add(0.9500f);//1.9
+        scale_small_list.add(0.9473f);//1.8
+        scale_small_list.add(0.94444f);//1.7
+        scale_small_list.add(0.9411f);//1.6
+        scale_small_list.add(0.9375f);//1.5
+        scale_small_list.add(0.9333f);//1.4
+        scale_small_list.add(0.9285f);//1.3
+        scale_small_list.add(0.9230f);//1.2
+        scale_small_list.add(0.9166f);//1.1
+        scale_small_list.add(0.9090f);//1.0
+    }
+
 
     @Override
     protected void onResume() {
@@ -89,25 +122,32 @@ public class SGLViewActivity extends Activity implements View.OnClickListener {
         mGLView.onPause();
     }
 
-    private float targetScale = value;
+    private float targetScale = 1.0f;
+    private int multiple = 0;
+
+
+
+
 
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.scale_large_bt:
-                targetScale = targetScale + 0.1f;
-                scaleCalculate(targetScale);
-                updateLRUDStatus();
-                if (targetScale > 4.0f) targetScale = 4.0f;
-                mGLView.scale(targetScale);
+                targetScale = targetScale*1.1f;
+
+                mGLView.scale(1.1f);
                 mGLView.requestRender();
+
+                scaleCalculate(1.1f);
+                updateLRUDStatus();
+
                 break;
             case R.id.scale_small_bt:
-                targetScale = targetScale - 0.1f;
-                if (targetScale < 1.0f) targetScale = 1.0f;
-                scaleCalculate(targetScale);
-                mGLView.scale(targetScale);
+                targetScale = targetScale*0.9f;
+                mGLView.scale(0.9f);
+                mGLView.requestRender();
+
                 if (left > -value) {
                     float left_offset = -value - left;
                     xMove(left_offset);
@@ -128,11 +168,12 @@ public class SGLViewActivity extends Activity implements View.OnClickListener {
                     yMove(down_offset);
                     mGLView.translateM(0, down_offset);
                 }
-                mGLView.requestRender();
+
+                scaleCalculate(0.9f);
                 updateLRUDStatus();
                 break;
             case R.id.translate_down_bt:
-                float tmp_up = 0.1f;
+                float tmp_up = 0.05f;
                 if (up < (value + 0.1)) {
                     tmp_up = up - value;
                 }
@@ -141,8 +182,8 @@ public class SGLViewActivity extends Activity implements View.OnClickListener {
                 mGLView.requestRender();
                 break;
             case R.id.translate_up_bt:
-                float tmp_down = 0.1f;
-                if (down > (-value - 0.1)) {
+                float tmp_down = 0.05f;
+                if (down > (-value - 0.05)) {
                     tmp_down = -value - down;
                 }
                 yMove(tmp_down);
@@ -150,8 +191,8 @@ public class SGLViewActivity extends Activity implements View.OnClickListener {
                 mGLView.requestRender();
                 break;
             case R.id.translate_left_bt:
-                float tmp_right = 0.1f;
-                if (right < (value + 0.1f)) {
+                float tmp_right = 0.05f ;
+                if (right < (value + 0.05f)) {
                     tmp_right = right - value;
                 }
                 xMove(-tmp_right);
@@ -159,8 +200,8 @@ public class SGLViewActivity extends Activity implements View.OnClickListener {
                 mGLView.requestRender();
                 break;
             case R.id.translate_right_bt:
-                float tmp_left = 0.1f;
-                if (left > -(value + 0.1f)) {
+                float tmp_left = 0.05f;
+                if (left > -(value + 0.05f)) {
                     tmp_left = -value - left;
                 }
                 xMove(tmp_left);
@@ -186,7 +227,7 @@ public class SGLViewActivity extends Activity implements View.OnClickListener {
     }
 
 
-    private final DecimalFormat df = new DecimalFormat("#.00");
+    private final DecimalFormat df = new DecimalFormat("#.0000");
 
     /**
      * 计算放大/缩小 left,right,up,down的坐标
@@ -194,10 +235,10 @@ public class SGLViewActivity extends Activity implements View.OnClickListener {
      * @param targetScale 缩放比例
      */
     private void scaleCalculate(float targetScale) {
-        left = Float.parseFloat(df.format(default_left * targetScale + centerX));
-        right = Float.parseFloat(df.format(default_right * targetScale + centerX));
-        up = Float.parseFloat(df.format(default_up * targetScale + centerY));
-        down = Float.parseFloat(df.format(default_down * targetScale + centerY));
+        left = Float.parseFloat(df.format(left * targetScale));
+        right = Float.parseFloat(df.format(right * targetScale));
+        up = Float.parseFloat(df.format(up * targetScale));
+        down = Float.parseFloat(df.format(down * targetScale));
     }
 
     /**
@@ -206,8 +247,8 @@ public class SGLViewActivity extends Activity implements View.OnClickListener {
      * @param offset like 0.1f(right) or -0.1f(left)
      */
     private void xMove(float offset) {
-        centerX = centerX + offset;
-        scaleCalculate(targetScale);
+        left = Float.parseFloat(df.format(left + offset*targetScale));
+        right = Float.parseFloat(df.format(right + offset*targetScale));
         updateLRUDStatus();
     }
 
@@ -217,8 +258,8 @@ public class SGLViewActivity extends Activity implements View.OnClickListener {
      * @param offset 0.1f(up) or -0.1f(down)
      */
     private void yMove(float offset) {
-        centerY = centerY + offset;
-        scaleCalculate(targetScale);
+        up = Float.parseFloat(df.format(up + offset*targetScale));
+        down = Float.parseFloat(df.format(down + offset*targetScale));
         updateLRUDStatus();
     }
 

@@ -24,54 +24,18 @@ public class CameraDrawer {
     private final FloatBuffer bPos;
     private final FloatBuffer bCoord;
 
-    private final float XValue = 1.0f;
-    private final float YValue = 1.9f;
-
-//    private final float value = 1.0f;
-//
-//    private final float[] sPos = {
-//            -value, value,
-//            -value, -value,
-//            value, value,
-//            value, -value
-//    };
-//
-//
-//    public void scale(float scale) {
-//        sPos[0] = -value * scale;
-//        sPos[1] = value * scale;
-//        sPos[2] = -value * scale;
-//        sPos[3] = -value * scale;
-//        sPos[4] = value * scale;
-//        sPos[5] = value * scale;
-//        sPos[6] = value * scale;
-//        sPos[7] = -value * scale;
-//        bPos.clear();
-//        bPos.put(sPos);
-//        bPos.position(0);
-//    }
-
+    private final float value = 0.5f;
 
     private final float[] sPos = {
-            -XValue, YValue,
-            -XValue, -YValue,
-            XValue, YValue,
-            XValue, -YValue
+            -value, value,
+            -value, -value,
+            value, value,
+            value, -value
     };
 
 
     public void scale(float scale) {
-        sPos[0] = -XValue * scale;
-        sPos[1] = YValue * scale;
-        sPos[2] = -XValue * scale;
-        sPos[3] = -YValue * scale;
-        sPos[4] = XValue * scale;
-        sPos[5] = YValue * scale;
-        sPos[6] = XValue * scale;
-        sPos[7] = -YValue * scale;
-        bPos.clear();
-        bPos.put(sPos);
-        bPos.position(0);
+        Matrix.scaleM(scaleMatrix, 0, scale, scale, 0);
     }
 
     public void translateM(float x, float y) {
